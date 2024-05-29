@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Print Page</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#printPage").click(function() {
+        // Trigger the print dialog
+        window.print();
+    });
+});
+</script>
+</head>
+<body>
+<button id="printPage">Print Page</button>
+</body>
+</html>
