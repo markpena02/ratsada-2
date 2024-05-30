@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Add validation checks here if needed
     if ($password !== $confirm_password) {
-        echo json_encode(["status" => "error", "message" => "Passwords do not match."]);
+        echo json_encode(["success" => false, "message" => "Passwords do not match."]);
         exit;
     }
 
@@ -26,13 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         // Registration successful
-        echo json_encode(["status" => "success", "message" => "Registration successful!"]);
+        echo json_encode(["success" => true, "message" => "Registration successful!"]);
     } else {
         // Registration failed
-        echo json_encode(["status" => "error", "message" => "Registration failed. Please try again later."]);
+        echo json_encode(["success" => false, "message" => "Registration failed. Please try again later."]);
     }
 
     $stmt->close();
+} else {
+    echo json_encode(["success" => false, "message" => "Invalid request method."]);
 }
 
 // Close the database connection

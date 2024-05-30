@@ -54,8 +54,8 @@
             $('#signup-form').submit(function(event) {
                 event.preventDefault(); // Prevent the default form submission
 
-                // Collect form data excluding the username field
-                var formData = $(this).find(':input').serialize();
+                // Collect form data
+                var formData = $(this).serialize();
 
                 // Send form data using AJAX
                 $.ajax({
@@ -69,8 +69,10 @@
                         // Display the message from the response
                         alert(jsonResponse.message);
 
-                        // Reload the page after the user clicks "OK"
-                        location.reload();
+                        // Redirect to signin.html after the user clicks "OK"
+                        if (jsonResponse.success) {
+                            window.location.href = 'signin.html';
+                        }
                     },
                     error: function(xhr, status, error) {
                         // Handle errors
