@@ -288,10 +288,6 @@ $(document).ready(function() {
         };
 
     function updateScore(radio) {
-        
-        // const scoreValue = scores[$(radio).val()];
-        // const scoreElementId = 'score' + $(radio).attr('name').replace('item', '');
-        // $('#' + scoreElementId).text(scoreValue.toFixed(1));
         const name = $(radio).attr('name');
         let scoreValue;
         if (name === 'item4' || name === 'item8' || name === 'item9' || name === 'item14' || name === 'item15') {
@@ -360,15 +356,26 @@ $(document).ready(function() {
             const itemName = $(this).find('.score-radio').attr('name');
             const score = $(this).find('.score-radio:checked').val();
             const comment = $(this).find('textarea').val();
+            let scoreValue;
+
+            // Apply scoring logic based on the item name
+            if (itemName === 'item4' || itemName === 'item8' || itemName === 'item9' || itemName === 'item14' || itemName === 'item15') {
+                scoreValue = (score === "Yes") ? 2.0 : (score === "Partly") ? 1.0 : 0.0;
+            } else if (itemName === 'item11' || itemName === 'item12' || itemName === 'item13' || itemName === 'item20' || itemName === 'item21' || itemName === 'item22') {
+                scoreValue = (score === "Yes") ? 0.67 : (score === "Partly") ? 0.33 : 0.0;
+            } else {
+                scoreValue = scores[score];
+            }
 
             if (score !== undefined) {
                 scoresData.push({
                     "item": itemName,
-                    "score": scores[score],
+                    "score": scoreValue, // Use the calculated scoreValue here
                     "comment": comment
                 });
             }
         });
+
 
         $.ajax({
             url: '../../controller/evaluator/fetch_proposal_details.php?id=' + proposalId,
