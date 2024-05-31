@@ -17,26 +17,33 @@
                     <div class="detail">
                         <h4>TITLE OF PROPOSAL</h4>
                         <p id="title"></p>
+                        <input type="text" id="title-input" class="form-control" style="display: none;">
                     </div>
                     <div class="detail">
                         <h4>NAME OF THE PROPONENT/S</h4>
                         <p id="proponent"></p>
+                        <input type="text" id="proponent-input" class="form-control" style="display: none;">
                     </div>
                     <div class="detail">
                         <h4>OFFICE/UNIT</h4>
                         <p id="office"></p>
+                        <input type="text" id="office-input" class="form-control" style="display: none;">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="detail">
                         <h4>PROGRAM/PROJECT DESCRIPTION</h4>
                         <p id="description"></p>
+                        <textarea id="description-input" class="form-control" rows="5" style="display: none;"></textarea>
                     </div>
                 </div>
+                <button id="edit-button" class="btn btn-success" style="display: none;">Edit</button>
+                <button id="save-button" class="btn btn-primary" style="display: none;">Save</button>
             </div>
         </div>
         <div class="buttons text-center mt-5">
             <button id="view-documents" class="btn btn-primary mr-3">View Documents</button>
+            <button id="view-certificate" class="btn btn-success mr-3" style="display: none;">View Certificate</button>
         </div>
     </div>
 
@@ -44,49 +51,137 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            console.log("Hello world");
+$(document).ready(function() {
+    console.log("Hello world");
 
-            // Function to parse query parameters
-            function getQueryParam(param) {
-                var urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
+    // Function to parse query parameters
+    function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Fetch proposal details
+    var proposalId = getQueryParam('id');
+    $.ajax({
+        url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response)
+            // Populate proposal details on the page
+            $('#title').text(response.title);
+            $('#proponent').text(response.proponent_name);
+            $('#office').text(response.office);
+            $('#description').text(response.description);
+
+            // Show View Certificate button if status is Complete
+            if (response.status === 'Completed') {
+                $('#view-certificate').show();
             }
 
-            // Fetch proposal details
-            var proposalId = getQueryParam('id');
-            $.ajax({
-                url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    // Populate proposal details on the page
-                    $('#title').text(response.title);
-                    $('#proponent').text(response.proponent_name);
-                    $('#office').text(response.office);
-                    $('#description').text(response.description);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    // Handle error
-                }
-            });
+            // Show Edit button if status is Pending
+            if (response.status === 'pending') {
+                $('#edit-button').show();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            // Handle error
+        }
+    });
 
-            // Event listener for View Documents button
-            $('#view-documents').click(function() {
-                // Get the proposal ID from the URL
-                var proposalId = getQueryParam('id');
-                console.log(proposalId);
-                if (proposalId) {
-                    // Redirect to download the document based on the proposal ID
-                    window.location.href = '../../controller/proposer/download_proposal.php?id=' + proposalId;
+    // Event listener for View Documents button
+    $('#view-documents').click(function() {
+        // Get the proposal ID from the URL
+        var proposalId = getQueryParam('id');
+        console.log(proposalId);
+        if (proposalId) {
+            // Redirect to download the document based on the proposal ID
+            window.location.href = '../../controller/proposer/download_proposal.php?id=' + proposalId;
+        } else {
+            // Proposal ID not found in the URL, handle accordingly
+            alert('Proposal ID not found.');
+        }
+    });
+
+    // Event listener for View Certificate button
+    $('#view-certificate').click(function() {
+        // Get the proposal ID from the URL
+        var proposalId = getQueryParam('id');
+        console.log(proposalId);
+        if (proposalId) {
+            // Redirect to view the certificate based on the proposal ID
+            window.location.href = 'hgdg_details.html?id=' + proposalId;
+        } else {
+            // Proposal ID not found in the URL, handle accordingly
+            alert('Proposal ID not found.');
+        }
+    });
+
+    // Event listener for Edit button
+    $('#edit-button').click(function() {
+        // Hide the text elements
+        $('#title').hide();
+        $('#proponent').hide();
+        $('#office').hide();
+        $('#description').hide();
+
+        // Show the input elements
+        $('#title-input').val($('#title').text()).show();
+        $('#proponent-input').val($('#proponent').text()).show();
+        $('#office-input').val($('#office').text()).show();
+        $('#description-input').val($('#description').text()).show();
+
+        // Show the Save button and hide the Edit button
+        $('#save-button').show();
+        $('#edit-button').hide();
+    });
+
+    // Event listener for Save button
+    $('#save-button').click(function() {
+        var updatedDetails = {
+            id: proposalId,
+            title: $('#title-input').val(),
+            proponent_name: $('#proponent-input').val(),
+            office: $('#office-input').val(),
+            description: $('#description-input').val()
+        };
+
+        $.ajax({
+            url: '../../controller/proposer/update_proposal_details.php',
+            type: 'POST',
+            data: JSON.stringify(updatedDetails),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                if (response.status === 'success') {
+                    // Update the text elements with new values
+                    $('#title').text(updatedDetails.title).show();
+                    $('#proponent').text(updatedDetails.proponent_name).show();
+                    $('#office').text(updatedDetails.office).show();
+                    $('#description').text(updatedDetails.description).show();
+
+                    // Hide the input elements
+                    $('#title-input').hide();
+                    $('#proponent-input').hide();
+                    $('#office-input').hide();
+                    $('#description-input').hide();
+
+                    // Show the Edit button and hide the Save button
+                    $('#edit-button').show();
+                    $('#save-button').hide();
                 } else {
-                    // Proposal ID not found in the URL, handle accordingly
-                    alert('Proposal ID not found.');
+                    alert('Error updating proposal details');
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                // Handle error
+                alert('Error updating proposal details');
+            }
         });
+    });
+});
     </script>
-    
 </body>
 </html>
