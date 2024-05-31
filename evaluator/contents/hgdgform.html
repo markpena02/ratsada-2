@@ -18,7 +18,7 @@
                     <td class="text-center logo-container"><img src="../../assets/img/useplogo.png" class="logo" alt="Logo"></td>
                     <td class="text-center">
                         <div>Republic of the Philippines</div>
-                        <div class="uni-name"><h2>University of Southeastern Philippines Maharlika</h2></div>
+                        <div class="uni-name"><h2>University of Southeastern Philippines</h2></div>
                         <div>Iñigo St., Bo. Obrero, Davao City 8000</div>
                         <div>Telephone: (082) 227-8192</div>
                         <div>Website: <a href="http://www.usep.edu.ph">www.usep.edu.ph</a></div>
@@ -43,6 +43,9 @@
         </tr>
         <tr>
             <td><strong>OFFICE/UNIT:</strong> <span id="office"></span></td>
+        </tr>
+        <tr>
+            <td><strong>DESCRIPTION:</strong> <span id="description"></span></td>
         </tr>
     </table>
 
@@ -257,6 +260,7 @@ $(document).ready(function() {
             $('#title').text(data.title);
             $('#proponent').text(data.proponent_name);
             $('#office').text(data.office);
+            $('#description').text(data.description);
             // $.ajax({
             //     url: '../../controller/evaluator/fetch_proposal_details.php?id=' + data[0].proposer_id,
             //     type: 'GET',
