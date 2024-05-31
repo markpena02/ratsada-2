@@ -77,16 +77,31 @@
     <script src="../assets/js/script.js"></script>
     <script>
         $(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: '../controller/auth_check.php',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                        alert("Welcome, " + response.user_name);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', xhr.responseText);
+                }
+            });
+
             $('#logout-button').click(function(event) {
                 event.preventDefault(); // Prevent the default link behavior
-                console.log("button is clicked")
+                console.log("button is clicked");
                 $.ajax({
                     type: 'POST',
                     url: '../controller/auth_logout.php', // Change the URL to point to logout.php
                     dataType: 'json',
                     success: function(response) {
                         // Redirect to the login page
-                        console.log(response)
+                        console.log(response);
                         window.location.href = 'signin.html';
                     },
                     error: function(xhr, status, error) {
@@ -95,7 +110,6 @@
                 });
             });
         });
-
     </script>
 </body>
 

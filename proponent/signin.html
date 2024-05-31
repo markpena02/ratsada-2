@@ -36,20 +36,6 @@
 
   <script>
     $(document).ready(function() {
-      $.ajax({
-          type: 'GET',
-          url: '../controller/auth_check.php',
-          dataType: 'json',
-          success: function(response) {
-            console.log(response)
-              // if (response.status === 'success') {
-              //     window.location.href = 'dashboard.html';
-              // }
-          },
-          error: function(xhr, status, error) {
-              console.error('Error:', xhr.responseText);
-          }
-      });
       $('#login-btn').click(function() {
           var email = $('#email').val();
           var password = $('#password').val();
@@ -62,7 +48,7 @@
               success: function(response) {
                   console.log('Success:', response);
                   if (response.status === 'success') {
-                      alert(response.message);
+                      localStorage.setItem('userName', response.user_name);  // Store the user's name in localStorage
                       window.location.href = response.redirect_url;
                   } else {
                       alert(response.message);
