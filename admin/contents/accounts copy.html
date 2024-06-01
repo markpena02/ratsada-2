@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Accounts</title>
+    <link rel="stylesheet" href="css/accounts.css">
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>Account Management</h1>
+        
+        <div class="evaluators">
+            <h2>Evaluators</h2>
+            <div class="table-container">
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>University Email</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="evaluator in evaluators" :key="evaluator.id">
+                            <td>{{ evaluator.id }}</td>
+                            <td>{{ evaluator.name }}</td>
+                            <td>{{ evaluator.university_email }}</td>
+                            <td>{{ evaluator.created_at }}</td>
+                            <td><button @click="deleteEvaluator(evaluator.id, evaluator.name)" class="delete-btn btn btn-danger">Delete</button></td>
+                            <!-- <td><button @click="deleteEvaluator(evaluator.id, evaluator.name)" class="delete-btn btn btn-danger">Delete</button></td> -->
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="../contents/signup.html" class="register-btn">Register an Evaluator Account</a>
+        </div>
+
+        <div class="proposers">
+            <h2>Proposers</h2>
+            <div class="table-container">
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>College/Office</th>
+                            <th>University Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="proposer in proposers" :key="proposer.id">
+                            <td>{{ proposer.id }}</td>
+                            <td>{{ proposer.name }}</td>
+                            <td>{{ proposer.college_office }}</td>
+                            <td>{{ proposer.university_email }}</td>
+                            <td><button @click="deleteProposer(proposer.id, proposer.name)" class="delete-btn btn btn-danger">Delete</button></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                evaluators: [],
+                proposers: []
+            },
+            mounted() {
+                this.fetchEvaluators();
+                this.fetchProposers();
+            },
+            methods: {
+                async fetchEvaluators() {
+                    try {
+                        const response = await axios.get('../../controller/admin/fetch_evaluators.php');
+                        this.evaluators = response.data;
+                    } catch (error) {
+                        console.error('Error fetching evaluators:', error);
+                    }
+                },
+                async fetchProposers() {
+                    try {
+                        const response = await axios.get('../../controller/admin/fetch_proposers.php');
+                        this.proposers = response.data;
+                    } catch (error) {
+                        console.error('Error fetching proposers:', error);
+                    }
+                },
+                async deleteEvaluator(userId, evaluatorName) {
+                    console.log(userId)
+                    const confirmDelete = confirm("Are you sure you want to delete " + evaluatorName + "?");
+                    if (confirmDelete) {
+                        try {
+                            const response = await axios.post('../../controller/admin/delete_evaluator.php', { id: userId });
+                            console.log(response.data);
+                            this.fetchEvaluators(); // Refresh the evaluator list after deletion
+                        } catch (error) {
+                            console.error('Error deleting evaluator:', error);
+                        }
+                    }
+                },
+                async deleteProposer(userId, proposerName) {
+                    console.log(userId);
+                    console.log(proposerName);
+                    const confirmDelete = confirm("Are you sure you want to delete " + proposerName + "?");
+                    if (confirmDelete) {
+                        try {
+                            const response = await axios.post('../../controller/admin/delete_proposer.php', { id: userId });
+                            console.log(response.data);
+                            this.fetchProposers();
+                        } catch (error) {
+                            console.error('Error deleting proposer:', error);
+                        }
+                    }
+                }
+
+            }
+        });
+    </script>
+</body>
+</html>

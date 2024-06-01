@@ -97,10 +97,9 @@ $(document).ready(function() {
         dataType: 'text',
         success: function(response) {
             console.log("ambot")
-            
+            console.log(response)
             const data = JSON.parse(response);
             console.log(data);
-            console.log(data[0].proposer_id)
             let jsonString = data[0].document_file;
             console.log(JSON.parse(JSON.parse(jsonString)))
             data_file = JSON.parse(JSON.parse(jsonString))
