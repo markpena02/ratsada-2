@@ -7,7 +7,7 @@ function fetch_proposals() {
     global $connection;
 
     // Query to fetch specific columns from submissions table where status is pending
-    $query = "SELECT title, proponent_name, description, id, proposer_id FROM submissions WHERE status = 'pending'";
+    $query = "SELECT * FROM submissions WHERE status = 'pending'";
 
     // Execute the query
     $result = $connection->query($query);
@@ -23,7 +23,8 @@ function fetch_proposals() {
                 "proponent_name" => $row['proponent_name'],
                 "description" => $row['description'],
                 "id" => $row['id'],
-                "proposer_id" => $row['proposer_id']
+                "proposer_id" => $row['proposer_id'],
+                "evaluator_id" => $row['evaluator_id']
             ];
         }
 
