@@ -6,8 +6,12 @@ function fetch_proposals() {
     // Connect to the database
     global $connection;
 
-    // Query to fetch specific columns from submissions table where status is pending
-    $query = "SELECT * FROM submissions WHERE status = 'pending'";
+    // Get evaluator_id from session
+    session_start();
+    $evaluator_id = $_SESSION['user_id'];
+
+    // Query to fetch specific columns from submissions table where status is pending and evaluator_id matches
+    $query = "SELECT * FROM submissions WHERE status = 'pending' AND evaluator_id = $evaluator_id";
 
     // Execute the query
     $result = $connection->query($query);

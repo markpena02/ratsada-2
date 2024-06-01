@@ -13,7 +13,7 @@
 
 <div class="container mt-5">
   <div class="title-box">
-    <h1 class="text-center">Pending Evaluations</h1>
+    <h1 class="text-center">EVALUATIONS</h1>
   </div>
   <div class="table-container">
     <table id="proposal-table" class="table table-striped">
@@ -65,7 +65,7 @@
   function fetchProposalData() {
     // Make AJAX request to fetch proposal data
     $.ajax({
-      url: '../../controller/evaluator/fetch_proposal.php',
+      url: '../../controller/admin/fetch_proposal.php',
       type: 'GET',
       dataType: 'json',
       success: function(response) {

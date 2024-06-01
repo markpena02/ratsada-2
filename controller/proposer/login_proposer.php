@@ -33,7 +33,8 @@ try {
                 echo json_encode([
                     "status" => "success", 
                     "message" => "Login successful", 
-                    "redirect_url" => "dashboard.html"
+                    "redirect_url" => "dashboard.html",
+                    "auth_id" => $_SESSION['user_id']
                 ]);
                 exit();
             }
