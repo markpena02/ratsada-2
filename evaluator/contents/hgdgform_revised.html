@@ -18,7 +18,7 @@
                     <td class="text-center logo-container"><img src="../../assets/img/useplogo.png" class="logo" alt="Logo"></td>
                     <td class="text-center">
                         <div>Republic of the Philippines</div>
-                        <div class="uni-name"><h2>University of Southeastern Philippines</h2></div>
+                        <div class="uni-name"><h2>University of Southeastern Philippines 123</h2></div>
                         <div>Iñigo St., Bo. Obrero, Davao City 8000</div>
                         <div>Telephone: (082) 227-8192</div>
                         <div>Website: <a href="http://www.usep.edu.ph">www.usep.edu.ph</a></div>
@@ -48,7 +48,7 @@
             <td><strong>DESCRIPTION:</strong> <span id="description"></span></td>
         </tr>
         <td>
-            <strong>&emsp;&emsp;&emsp;&emsp;SCORE:</strong> 8.00 <strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;REMARKS:</strong> Proposed project is gender-sensitive (proposal passes the GAD test)
+            <strong >&emsp;&emsp;&emsp;&emsp;SCORE:</strong><span class="totalScore"></span> <strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;REMARKS:</strong><span class="gadEvaluation"></span>
         </td>
         <tr>
             <td>
@@ -253,8 +253,8 @@
             </tr>
             <tr>
                 <td colspan="4"></td>
-                <td><span id="totalScore">0.0</span></td>
-                <td><i>Proposed project is gender-sensitive (proposal passes the GAD test).</i></td>
+                <td><span class="totalScore">0.0</span></td>
+                <td><i class="gadEvaluation"></i></td>
             </tr>
             <!-- Add more items as needed -->
         </tbody>
@@ -280,7 +280,7 @@
             </tbody>
         </table>
     </div>
-    <!--<div>Total Score: <span id="totalScore">0.00</span></div>-->
+    <!--<div>Total Score: <span class="totalScore">0.00</span></div>-->
     <div class="text-center no-print">
         <button class="btn btn-primary" id="saveBtn">Save</button>
         <button class="btn btn-primary" id="submitBtn">Submit</button>
@@ -351,6 +351,33 @@ $(document).ready(function() {
         $('#' + scoreElementId).text(scoreValue.toFixed(2));
         // calculateTotalScore();
         calculateTotalScore();
+        var gadArray = [
+                ["0-3.9", "GAD is invisible in the project (proposal is returned)"],
+                ["4.0-7.9", "Proposed project has promising GAD prospects (proposal earns a 'conditional pass' pending identification of gender issue/s and strategies and activities to address these, and inclusion of the collection of sex-disaggregated data in the monitoring and evaluation plan)."],
+                ["8.0-14.9", "Proposed project is gender-sensitive (proposal passes the GAD test)."],
+                ["15.0-20.0", "Proposed project is gender-responsive (proponent is commended)."]
+            ];
+
+            function getGadEvaluation(totalScore) {
+                for (var i = 0; i < gadArray.length; i++) {
+                    var range = gadArray[i][0].split('-');
+                    var minScore = parseFloat(range[0]);
+                    var maxScore = parseFloat(range[1]);
+                    if (totalScore >= minScore && totalScore <= maxScore) {
+                        return gadArray[i][1];
+                    }
+                }
+                return "Score out of range";
+            }
+
+            // Get the total score from the HTML
+            var totalScore = parseFloat($('.totalScore').text());
+
+            // Get the corresponding evaluation
+            var evaluation = getGadEvaluation(totalScore);
+
+            // Update the evaluation in the HTML
+            $('.gadEvaluation').text(evaluation);
     }
 
     function calculateSubtotal(sectionItems) {
@@ -366,7 +393,7 @@ $(document).ready(function() {
         $('.score').each(function() {
             totalScore += parseFloat($(this).text());
         });
-        $('#totalScore').text(totalScore.toFixed(2));
+        $('.totalScore').text(totalScore.toFixed(2));
 
         // Calculate subtotals for specific sections
         const subtotals = {
@@ -503,7 +530,7 @@ $(document).ready(function() {
             $('.score').each(function() {
                 totalScore += parseFloat($(this).text());
             });
-            $('#totalScore').text(totalScore.toFixed(2));
+            $('.totalScore').text(totalScore.toFixed(2));
         }
 
         $('.score-radio').on('change', function() {
