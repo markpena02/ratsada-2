@@ -50,7 +50,7 @@
                         <th>Date Received</th>
                         <th>Date Reviewed</th>
                         <th>Proposal Title</th>
-                        <th>Proposer Name</th>
+                        <th>Proponent/s</th>
                         <th>Status</th>
                         <th>Resources</th>
                         <th>Certificate</th>
@@ -71,6 +71,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script src="js/gmef.js"></script>
     <script>
     $(document).ready(function() {
@@ -180,6 +181,44 @@
         // Call fetchProposalDetails function on page load
         fetchProposalDetails();
     });
+    $(document).ready(function() {
+    // Event listener for the Save button
+    $('#saveButton').click(function() {
+        // Check if the table has any rows
+        if ($('#proposalDetails tbody tr').length === 0) {
+            alert('No data to save.');
+            return; // Exit function if table is empty
+        }
+
+        // Extract data from the table
+        var data = [];
+        
+        // Extract header row data
+        var headerRowData = [];
+        $('#proposalDetails thead th').each(function() {
+            headerRowData.push($(this).text());
+        });
+        data.push(headerRowData);
+
+        // Extract table body data
+        $('#proposalDetails tbody tr').each(function() {
+            var rowData = [];
+            $(this).find('td').each(function() {
+                rowData.push($(this).text());
+            });
+            data.push(rowData);
+        });
+
+        // Convert data to Excel format
+        var ws = XLSX.utils.aoa_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Trigger download
+        XLSX.writeFile(wb, 'proposal_details.xlsx');
+    });
+});
+
     </script>
 </body>
 </html>
