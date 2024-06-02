@@ -386,6 +386,7 @@ $(document).ready(function() {
             type: 'GET',
             dataType: 'json',
             success: function(response) {
+                console.log(scoresData)
                 const formData = {
                     proposer_id: response.id,
                     evaluator_id: "2",
@@ -395,9 +396,9 @@ $(document).ready(function() {
                     date_received: response.submitted_at,
                     date_reviewed: new Date().toISOString().slice(0, 10),
                     status: "Completed",
-                    remarks: "Certification Issued",
+                    // remarks: "Certification Issued",
                     description: response.description,
-                    college_office: "collegeOffice"
+                    // college_office: "collegeOffice"
                 };
 
                 $.ajax({

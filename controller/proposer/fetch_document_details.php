@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
     $id = mysqli_real_escape_string($connection, $_GET['id']);
 
     // Fetch data from the database based on the provided ID
-    $sql = "SELECT * FROM documents WHERE id = $id";
+    $sql = "SELECT * FROM documents WHERE proposer_id = $id";
 } else {
     // Fetch all data from the database if 'id' is not set
     $sql = "SELECT * FROM documents";
