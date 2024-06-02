@@ -107,9 +107,10 @@
         </table>
         
     </div>
-    <!--<div class="text-center no-print">
-        <button class="btn btn-primary" id="saveBtn">Save</button>
-    </div>-->
+    
+</div>
+<div class="text-center no-print">
+    <button class="btn btn-primary" id="saveBtn">Save</button>
 </div>
 <script src="js/print.js"></script>
 <script>
@@ -507,6 +508,14 @@ $(document).ready(function() {
         //     $('.gadEvaluation').text(evaluation);
     }
 });
+$('#saveBtn').on('click', function() {
+        // Hide the save button before printing
+        $(this).hide();
+        // Print the page
+        window.print();
+        // Show the save button again after printing
+        $(this).show();
+    });
 </script>
 </body>
 </html>
