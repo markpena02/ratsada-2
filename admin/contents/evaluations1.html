@@ -73,11 +73,12 @@
         // Process the response and update the table
         if(response.length > 0) {
           $.each(response, function(index, proposal) {
-            console.log(proposal.evaluator_id);
+            var shortDescription = proposal.description.substring(0, 100) + '...';
+            var fullDescription = proposal.description;
             var tableRows = '<tr>';
             tableRows += '<td>' + proposal.title + '</td>';
             tableRows += '<td>' + proposal.proponent_name + '</td>';
-            tableRows += '<td>' + proposal.description + '</td>';
+            tableRows += '<td><div class="description" data-full-text="' + fullDescription + '" data-short-text="' + shortDescription + '">' + shortDescription + ' <a href="#" class="toggle-description">Read More</a></div></td>';
             tableRows += '<td>';
 
             // Check if evaluator is assigned
@@ -109,6 +110,24 @@
             tableRows += '</tr>'; // Close the row
             $('#proposal-table tbody').append(tableRows);
           });
+          
+          // Attach click event for Read More/Read Less links
+          $(document).on('click', '.toggle-description', function(e) {
+            e.preventDefault();
+            var descriptionDiv = $(this).parent();
+            var fullText = descriptionDiv.data('full-text');
+            var shortText = descriptionDiv.data('short-text');
+            var isExpanded = descriptionDiv.hasClass('expanded');
+
+            if (isExpanded) {
+              descriptionDiv.html(shortText + ' <a href="#" class="toggle-description">Read More</a>');
+            } else {
+              descriptionDiv.html(fullText + ' <a href="#" class="toggle-description">Read Less</a>');
+            }
+
+            descriptionDiv.toggleClass('expanded');
+          });
+
         } else {
           $('#proposal-table tbody').html('<tr><td colspan="4">No proposals found</td></tr>');
         }
@@ -119,6 +138,7 @@
       }
     });
   }
+
   function selectEvaluator(element, proposalId) {
     // Get the selected evaluator's ID and name
     var selectedEvaluatorId = $(element).data('id');

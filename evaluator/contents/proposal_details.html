@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="buttons text-center mt-5">
-            <button id="view-documents" class="btn btn-primary mr-3">View Documents</button>
+            <button id="view-documents" class="btn btn-primary mr-3">Download Documents</button>
             <button id="view-evaluation-form" class="btn btn-secondary">View Evaluation Form</button>
         </div>
     </div>
@@ -96,7 +96,7 @@
             // Event listener for View Evaluation Form button
             $('#view-evaluation-form').click(function() {
                 if (proposalId) {
-                    window.location.href = `../../evaluator/contents/hgdgform.html?id=${proposalId}`;
+                    window.location.href = `../../evaluator/contents/hgdgform1.html?id=${proposalId}`;
                 } else {
                     alert('Proposal ID not found.');
                 }

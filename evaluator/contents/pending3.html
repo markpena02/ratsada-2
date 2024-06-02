@@ -21,8 +21,6 @@
       <thead>
         <tr>
           <th>TITLE OF PROPOSAL</th>
-          <th>NAME OF THE PROPONENT/S</th>
-          <th>PROGRAM/PROJECT DESCRIPTION</th>
           <th>ACTION</th>
         </tr>
       </thead>
@@ -51,14 +49,12 @@
           $.each(response, function(index, proposal) {
             tableRows += '<tr>';
             tableRows += '<td>' + proposal.title + '</td>';
-            tableRows += '<td>' + proposal.proponent_name + '</td>';
-            tableRows += '<td>' + proposal.description + '</td>';
-            tableRows += '<td><a href="proposal_details1.html?id=' + proposal.id + '" class="btn btn-view">View</a></td>';
+            tableRows += '<td><a href="proposal_details.html?id=' + proposal.id + '" class="btn btn-view">View</a></td>';
             tableRows += '</tr>';
           });
           $('#proposal-table tbody').html(tableRows);
         } else {
-          $('#proposal-table tbody').html('<tr><td colspan="4">No proposals found</td></tr>');
+          $('#proposal-table tbody').html('<tr><td colspan="2">No proposals found</td></tr>');
         }
 
         // Implement search functionality
@@ -71,7 +67,7 @@
       },
       error: function(xhr, status, error) {
         console.error('Error:', error);
-        $('#proposal-table tbody').html('<tr><td colspan="4">Error fetching proposals</td></tr>');
+        $('#proposal-table tbody').html('<tr><td colspan="2">Error fetching proposals</td></tr>');
       }
     });
   });
