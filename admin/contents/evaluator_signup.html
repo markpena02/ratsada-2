@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAD System</title>
-    <link rel="stylesheet" href="../assets/css/styles-signup.css">
+    <link rel="stylesheet" href="css/signup.css">
+  
+   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .error {
@@ -17,7 +19,7 @@
 <body>
     <div class="container">
         <div class="signup-section">
-            <h2>Register an admin Account</h2>
+            <h2>Register an Evaluator Account</h2>
             <p>
                 <a href="signin.html" class="login-link">Already Registered? Login</a>
             </p>
@@ -65,10 +67,10 @@
                     var confirmPassword = $('#confirm-password').val();
 
                     // Full name validation
-                    if (fullName.split(' ').length < 3) {
-                        $('#full-name-error').text('Please enter your full name including first name, middle initial, and last name.');
-                        isValid = false;
-                    }
+                    //if (fullName.split(' ').length < 3) {
+                    //    $('#full-name-error').text('Please enter your full name including first name, middle initial, and last name.');
+                    //    isValid = false;
+                    //}
 
                     // Email validation
                     var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -94,13 +96,13 @@
                         var formData = $(this).serialize();
                         $.ajax({
                             type: 'POST',
-                            url: '../controller/admin/create_admin.php',
+                            url: '../../controller/evaluator/create_evaluator.php',
                             data: formData,
                             success: function(response) {
                                 var jsonResponse = JSON.parse(response);
                                 alert(jsonResponse.message);
                                 if (jsonResponse.status === 'success') {
-                                    window.location.href = '../admin/signin.html';
+                                    window.location.href = '../admin/content/accounts.html';
                                 } else {
                                     alert(jsonResponse.message);
                                 }
