@@ -145,6 +145,7 @@ $(document).ready(function() {
             let jsonString = data[0].document_file;
             console.log(JSON.parse(JSON.parse(jsonString)))
             data_file = JSON.parse(JSON.parse(jsonString))
+            console.log(data_file)
             // console.log(data[0].date_received)
             // console.log(data[0].date_reviewed)
             $('#dateRequested').text(data[0].date_received);
@@ -370,7 +371,8 @@ $(document).ready(function() {
         `);
 
         documentFile.forEach(item => {
-            $(`input[name=${item.item}][value=${getRadioValue(item.score)}]`).prop('checked', true);
+            console.log(item)
+            $(`input[name=${item.item}][value=${getRadioValue(item.score, item.item)}]`).prop('checked', true);
             $(`#score${item.item.slice(4)}`).text(item.score);
             $(`textarea[rows=${item.item.slice(4)}]`).val(item.comment);
         });
@@ -378,10 +380,27 @@ $(document).ready(function() {
         updateTotalScore();
     }
 
-    function getRadioValue(score) {
-        if (score == 0) return 'No';
-        if (score == 1) return 'Yes';
-        return 'Partly';
+    function getRadioValue(score, name) {
+        console.log("score: "+score)
+        console.log("name: "+name)
+        // if (score == 0) return 'No';
+        // if (score == 1) return 'Yes';
+        // return 'Partly';
+        if (name === 'item2' || name === 'item3' || name === 'item6' || name === 'item7' || name === 'item8' || name === 'item15' || name === 'item17' || name === 'item18'){
+            if (score == 0) return 'No'
+            if (score == 0.5) return 'Partly'
+            if (score == 1) return 'Yes'
+        }
+        if (name === 'item11' || name === 'item12' || name === 'item13' || name === 'item20' || name === 'item21' || name === 'item22'){
+            if (score == 0) return 'No'
+            if (score == 0.33) return 'Partly'
+            if (score == 0.67) return 'Yes'
+        }
+        else {
+            if (score == 0) return 'No';
+            if (score == 1) return 'Partly';
+            if (score == 2) return 'Yes'
+        }
     }
 
     function updateTotalScore() {

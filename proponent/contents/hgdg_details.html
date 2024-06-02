@@ -85,7 +85,7 @@
             <!-- Form rows will be inserted here -->
         </tbody>
     </table>
-    <div>Total Score: <span id="totalScore">0.00</span></div>
+    <!-- <div>Total Score: <span id="totalScore">0.00</span></div> -->
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -111,6 +111,7 @@
 
 <script>
 $(document).ready(function() {
+    
     const proposalId = getQueryParam('id');
     // const jsonString = "[{\"item\":\"item2\",\"score\":0,\"comment\":\"\"},{\"item\":\"item3\",\"score\":0.5,\"comment\":\"\"},{\"item\":\"item4\",\"score\":1,\"comment\":\"\"},{\"item\":\"item6\",\"score\":1,\"comment\":\"\"},{\"item\":\"item7\",\"score\":0.5,\"comment\":\"\"}";
     // $.ajax({
@@ -183,6 +184,7 @@ $(document).ready(function() {
                     let jsonString = response2[0].document_file;
                     // console.log(JSON.parse(JSON.parse(jsonString)))
                     data_file = JSON.parse(JSON.parse(jsonString))
+                    console.log(data_file)
                     // console.log(response2[0].date_received)
                     // console.log(response2[0].date_reviewed)
                     
@@ -393,10 +395,27 @@ $(document).ready(function() {
         updateTotalScore();
     }
 
-    function getRadioValue(score) {
-        if (score == 0) return 'No';
-        if (score == 1) return 'Yes';
-        return 'Partly';
+    function getRadioValue(score, name) {
+        console.log("score: "+score)
+        console.log("name: "+name)
+        // if (score == 0) return 'No';
+        // if (score == 1) return 'Yes';
+        // return 'Partly';
+        if (name === 'item3' || name === 'item6' || name === 'item8' || name === 'item9' || name === 'item14' || name === 'item15' || name === 'item17' || name === 'item18'){
+            if (score == 0) return 'No'
+            if (score == 0.5) return 'Partly'
+            if (score == 1) return 'Yes'
+        }
+        if (name === 'item11' || name === 'item12' || name === 'item13' || name === 'item20' || name === 'item21' || name === 'item22'){
+            if (score == 0) return 'No'
+            if (score == 0.33) return 'Partly'
+            if (score == 0.67) return 'Yes'
+        }
+        else {
+            if (score == 0) return 'No';
+            if (score == 1) return 'Partly';
+            if (score == 2) return 'Yes'
+        }
     }
 
     function updateTotalScore() {
@@ -433,6 +452,7 @@ $(document).ready(function() {
             // Update the evaluation in the HTML
             $('.gadEvaluation').text(evaluation);
     }
+
 
     $(document).on('change', '.score-radio', function() {
         const score = parseFloat($(this).val());
