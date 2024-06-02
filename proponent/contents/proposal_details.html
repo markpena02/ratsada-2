@@ -11,7 +11,7 @@
 <body>
     <div class="container my-5">
         <div class="proposal-details">
-            <h1 class="text-center mb-4">Proposal Details</h1>
+            <h1 class="text-center mb-4">Proposal Detailsss</h1>
             <div class="row">
                 <div class="col-md-6">
                     <div class="detail">
@@ -36,6 +36,9 @@
                         <p id="description"></p>
                         <textarea id="description-input" class="form-control" rows="5" style="display: none;"></textarea>
                     </div>
+                    <div class="detail">
+                        <h3 id="status-label" style="display: none;"></h3>
+                    </div>
                 </div>
                 <button id="edit-button" class="btn btn-success" style="display: none;">Edit</button>
                 <button id="save-button" class="btn btn-primary" style="display: none;">Save</button>
@@ -45,6 +48,7 @@
             <button id="view-documents" class="btn btn-primary mr-3">Download Files</button>
             <button id="view-certificate" class="btn btn-success mr-3" style="display: none;">View Certificate</button>
         </div>
+       
     </div>
 
     <!-- jQuery -->
@@ -62,32 +66,71 @@ $(document).ready(function() {
 
     // Fetch proposal details
     var proposalId = getQueryParam('id');
-    $.ajax({
-        url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            console.log(response)
-            // Populate proposal details on the page
-            $('#title').text(response.title);
-            $('#proponent').text(response.proponent_name);
-            $('#office').text(response.office);
-            $('#description').text(response.description);
+    
+    function fetchProposalDetails() {
+        return $.ajax({
+            url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
+            type: 'GET',
+            dataType: 'json'
+        });
+    }
 
-            // Show View Certificate button if status is Complete
-            if (response.status === 'Completed') {
-                $('#view-certificate').show();
-            }
+    function fetchDocumentDetails() {
+        return $.ajax({
+            url: '../../controller/proposer/fetch_document_details.php?id=' + proposalId,
+            type: 'GET',
+            dataType: 'json'
+        });
+    }
 
-            // Show Edit button if status is Pending
-            if (response.status === 'pending') {
-                $('#edit-button').show();
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-            // Handle error
+    $.when(fetchProposalDetails(), fetchDocumentDetails()).done(function(proposalResponse, documentResponse) {
+        console.log('Proposal Details Response:', proposalResponse);
+        console.log('Document Details Response:', documentResponse);
+
+
+    // Rest of your code...
+
+        var proposal = proposalResponse[0];
+        var documentDetails = documentResponse[0];
+
+        console.log(proposal)
+        console.log(documentDetails)
+        console.log(JSON.parse(JSON.parse(documentDetails[0].document_file)))
+
+        // Populate proposal details on the page
+        $('#title').text(proposal.title);
+        $('#proponent').text(proposal.proponent_name);
+        $('#office').text(proposal.office);
+        $('#description').text(proposal.description);
+
+        // Show View Certificate button if status is Complete
+        if (proposal.status === 'Completed') {
+            $('#view-certificate').show();
         }
+
+        // Show Edit button if status is Pending
+        if (proposal.status === 'pending') {
+            $('#edit-button').show();
+        }
+
+        // Process document details
+        try {
+            var documentFile = JSON.parse(JSON.parse(documentDetails[0].document_file));
+            var totalScore = documentFile.reduce((sum, item) => sum + item.score, 0);
+            console.log(totalScore)
+            if (totalScore <= 7.9) {
+                $('#view-certificate').hide();
+                $('#status-label').text('Rejected').show();
+            } else {
+                $('#status-label').text('Accepted').show();
+            }
+        } catch (e) {
+            console.error('Error parsing document file:', e);
+            $('#status-label').text('Error processing document details').show();
+        }
+    }).fail(function(xhr, status, error) {
+        console.error('Error:', error);
+        // Handle error
     });
 
     // Event listener for View Documents button
