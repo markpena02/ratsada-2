@@ -1,0 +1,2 @@
+<br />
+<b>Warning</b>:  readfile(../resources/proposal_75): Failed to open stream: Permission denied in <b>C:\xampp\htdocs\ratsada-2\controller\proposer\download_proposal.php</b> on line <b>31</b><br />

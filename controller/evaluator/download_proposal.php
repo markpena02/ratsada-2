@@ -6,36 +6,58 @@ include_once("../database.php");
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $proposalId = $_GET['id'];
 
-    // Prepare and execute query to fetch file path based on ID
+    // Prepare and execute query to fetch folder path based on ID
     $stmt = $connection->prepare("SELECT document FROM submissions WHERE id = ?");
     $stmt->bind_param("i", $proposalId);
     $stmt->execute();
     $stmt->store_result();
 
-    // Check if a file path is found
+    // Check if a folder path is found
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($filePath);
+        $stmt->bind_result($folderPath);
         $stmt->fetch();
 
-        // Construct the full file path
-        $fullFilePath = realpath($filePath);
+        // Check if the folder exists
+        if (is_dir($folderPath)) {
+            // Create a zip file
+            $zip = new ZipArchive();
+            $zipFileName = tempnam(sys_get_temp_dir(), 'zip');
+            if ($zip->open($zipFileName, ZipArchive::CREATE) !== TRUE) {
+                exit("Cannot open <$zipFileName>\n");
+            }
 
-        // Check if the file exists
-        if (file_exists($fullFilePath)) {
+            // Add files to the zip file
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($folderPath),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($files as $name => $file) {
+                // Skip directories (they would be added automatically)
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = substr($filePath, strlen($folderPath) + 1);
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+
+            // Close the zip file
+            $zip->close();
+
             // Set headers for file download
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . basename($fullFilePath) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($fullFilePath));
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . basename($folderPath) . '.zip"');
+            header('Content-Length: ' . filesize($zipFileName));
 
-            // Output the file content
-            readfile($fullFilePath);
+            // Output the zip file content
+            readfile($zipFileName);
+
+            // Delete the temporary zip file
+            unlink($zipFileName);
             exit;
         } else {
-            // File not found
-            echo "File not found.";
+            // Folder not found
+            echo "Folder not found.";
         }
     } else {
         // Proposal not found
