@@ -32,7 +32,7 @@ try {
                 // Redirect to dashboard
                 echo json_encode([
                     "status" => "success", 
-                    "message" => "Login successful", 
+                    "message" => "Login successfulsss", 
                     "redirect_url" => "dashboard.html",
                     "auth_id" => $_SESSION['user_id']
                 ]);

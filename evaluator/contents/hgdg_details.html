@@ -7,6 +7,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/hgdgform.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
 
@@ -48,7 +49,7 @@
             <td><strong>PROGRAM/PROJECT DESCRIPTION</strong> <span id="description"></span></td>
         </tr>
         <td>
-            <strong >&emsp;&emsp;&emsp;&emsp;SCORE:</strong><span class="totalScore"></span> <strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;REMARKS:</strong><span class="gadEvaluation"></span>
+            <strong >&emsp;&emsp;&emsp;&emsp;SCORE : </strong><span class="totalScore"></span> <strong>&emsp;&emsp;&emsp;&emsp;&emsp;REMARKS : </strong><span class="gadEvaluation"></span>
         </td>
         <tr>
             <td>
@@ -59,13 +60,11 @@
                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;KETHELLE I. SAJONIA <span class="underline">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;Signature:</span><img src="signatures/sajonia.png" class="signature"><br>
                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;RENDEL B. BACAN <span class="underline">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Signature:</span><img src="signatures/bacan.png" class="signature"><br>
                 
-                <strong>
-                    Date Requested: <span id="dateRequested"></span>
+                <strong>Date Requested : </strong><span id="dateRequested"></span>
                     <br>
-                    Date Reviwed: <span id="dateReviewed"></span>
+                    <strong> Date Reviwed : </strong><span id="dateReviewed"></span>
                 <br>
                 <!-- Review No: 1 -->
-            </strong>
             </td>
         </tr>
     </table>
@@ -85,7 +84,7 @@
             <!-- Form rows will be inserted here -->
         </tbody>
     </table>
-    <div>Total Score: <span id="totalScore">0.00</span></div>
+    <!--<div>Total Score: <span id="totalScore">0.00</span></div>-->
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -106,9 +105,14 @@
                 </tr>
             </tbody>
         </table>
+        
     </div>
+    
 </div>
-
+<div class="text-center no-print">
+    <button class="btn btn-primary" id="saveBtn">Save</button>
+</div>
+<script src="js/print.js"></script>
 <script>
 $(document).ready(function() {
     const proposalId = getQueryParam('id');
@@ -504,6 +508,14 @@ $(document).ready(function() {
         //     $('.gadEvaluation').text(evaluation);
     }
 });
+$('#saveBtn').on('click', function() {
+        // Hide the save button before printing
+        $(this).hide();
+        // Print the page
+        window.print();
+        // Show the save button again after printing
+        $(this).show();
+    });
 </script>
 </body>
 </html>

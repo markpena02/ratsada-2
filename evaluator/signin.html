@@ -50,6 +50,7 @@
               console.error('Error:', xhr.responseText);
           }
       });
+
       $('#login-btn').click(function() {
           var email = $('#email').val();
           var password = $('#password').val();
@@ -62,7 +63,6 @@
               success: function(response) {
                   console.log('Success:', response);
                   if (response.status === 'success') {
-                      alert(response.message);
                       window.location.href = response.redirect_url;
                   } else {
                       alert(response.message);
