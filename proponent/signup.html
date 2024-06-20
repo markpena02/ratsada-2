@@ -59,7 +59,7 @@
                 event.preventDefault(); // Prevent the default form submission
 
                 var formData = $(this).serialize();
-
+                console.log(formData)
                 $.ajax({
                     type: 'POST',
                     url: '../controller/proposer/create_proposer.php',
