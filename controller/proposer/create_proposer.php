@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $university_email = $_POST['university_email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $is_employee = isset($_POST['employee']) ? 1 : 0;
 
     // Add validation checks here if needed
     if ($password !== $confirm_password) {
@@ -25,10 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssss", $full_name, $college_office, $university_email, $hashed_password);
 
     if ($stmt->execute()) {
-        // Registration successful
+        // Retrieve the auto-generated id
+        $proposer_id = $stmt->insert_id;
+
+        // Format the proposer_id as "p-000001"
+        // $formatted_proposer_id = "p-" . str_pad($proposer_id, 6, '0', STR_PAD_LEFT);
+        if ($is_employee) {
+            $formatted_proposer_id = "i-" . str_pad($proposer_id, 6, '0', STR_PAD_LEFT);
+        } else {
+            $formatted_proposer_id = "o-" . str_pad($proposer_id, 6, '0', STR_PAD_LEFT);
+        }
+
+        // Update the proposer_id in the database
+        $update_stmt = $connection->prepare("UPDATE proponents SET proposer_id = ? WHERE id = ?");
+        $update_stmt->bind_param("si", $formatted_proposer_id, $proposer_id);
+        $update_stmt->execute();
+
         echo json_encode(["success" => true, "message" => "Registration successful!"]);
     } else {
-        // Registration failed
         echo json_encode(["success" => false, "message" => "Registration failed. Please try again later."]);
     }
 
