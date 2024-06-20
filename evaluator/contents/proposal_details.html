@@ -43,7 +43,7 @@
         </div>
         <div class="buttons text-center mt-5">
             <button id="view-documents" class="btn btn-primary mr-3">Download Documents</button>
-            <button id="view-certificate" class="btn btn-success mr-3" style="display: none;">View Certificate</button>
+            <button id="view-evaluation-form" class="btn btn-secondary">View Evaluation Form</button>
         </div>
 
         <div class="table-responsive mt-5">
@@ -249,6 +249,19 @@
                 alert('Proposal ID not found.');
             }
         });
+        $('#view-evaluation-form').click(function() {
+                // Get the proposal ID from the URL
+                var proposalId = getQueryParam('id');
+                console.log("mamiya")
+                console.log(proposalId)
+                if (proposalId) {
+                    // Redirect to the evaluation form based on the proposal ID
+                    window.location.href = './hgdgform1.html?id=' + proposalId;
+                } else {
+                    // Proposal ID not found in the URL, handle accordingly
+                    alert('Proposal ID not found.');
+                }
+            });
 
         // Edit button click handler
         // $('#edit-button').click(function() {
